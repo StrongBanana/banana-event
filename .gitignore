@@ -1,6 +1,14 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Java template
 # Compiled class file
-*.class
 
+*.iml
+*.idea/
+*/target
+*/**/target
+*.war
+*.class
+.idea/
 # Log file
 *.log
 
@@ -10,9 +18,14 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# idea
+/.project
+/.settings/
+
+
+
 # Package Files #
 *.jar
-*.war
 *.nar
 *.ear
 *.zip
@@ -21,4 +34,10 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-replay_pid*
+
+*/target/
+
+.DS_Store
+*/.DS_Store
+*.ipr
+*.iws
