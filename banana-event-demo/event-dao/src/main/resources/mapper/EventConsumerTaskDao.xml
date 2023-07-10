@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banana.event.demo.dao.mapper.EventConsumerTaskDao">
+  <resultMap id="BaseResultMap" type="com.banana.event.demo.dao.pojo.EventConsumerTaskDO">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="domain_code" jdbcType="VARCHAR" property="domainCode" />
+    <result column="event_code" jdbcType="VARCHAR" property="eventCode" />
+    <result column="event_id" jdbcType="BIGINT" property="eventId" />
+    <result column="consumer_code" jdbcType="VARCHAR" property="consumerCode" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="async" jdbcType="INTEGER" property="async" />
+    <result column="yn" jdbcType="INTEGER" property="yn" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, domain_code, event_code, event_id, publish_time, consumer_code, `status`,
+    num, async, yn, create_time, update_time
+  </sql>
+
+  <insert id="batchInsert" parameterType="com.banana.event.demo.dao.pojo.EventConsumerTaskDO">
+    <!--@mbg.generated-->
+    insert into event_consumer (domain_code, event_code,
+      event_id, consumer_code, status, num, async)
+    values
+    <foreach collection="list" item="entity" separator=",">
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        #{entity.domainCode,jdbcType=VARCHAR},
+        #{entity.eventCode,jdbcType=INTEGER},
+        #{entity.eventId,jdbcType=BIGINT},
+        #{entity.consumerCode,jdbcType=VARCHAR},
+        #{entity.status,jdbcType=INTEGER},
+        #{entity.num,jdbcType=INTEGER},
+        #{entity.async,jdbcType=INTEGER}
+      </trim>
+    </foreach>
+  </insert>
+
+  <update id="refreshState" parameterType="com.banana.event.demo.dao.pojo.EventConsumerTaskDO">
+    update event_consumer set
+    status = #{status,jdbcType=INTEGER},
+    num = #{num,jdbcType=INTEGER}
+    where event_id = #{eventId,jdbcType=BIGINT}
+    and consumer_code = #{consumerCode,jdbcType=VARCHAR}
+
+  </update>
+
+  <select id="selectByEventId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from event_consumer
+    where event_id = #{eventId,jdbcType=BIGINT}
+    and consumer_code = #{consumerCode,jdbcType=VARCHAR}
+    and yn = 1
+  </select>
+</mapper>

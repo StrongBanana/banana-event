@@ -1,0 +1,8 @@
+按照DDD思想进行模块划分
+export：做为微服务对我提供的api接口
+facade：对外部请求进行封装处理，实现export接口，监听MQ消息等；最后去调用application层
+application：DDD应用层
+domain：领域层，存放entity、声明领域服务接口、仓储接口；
+infrastructure：基础设施层，实现对象存储；RPC调用也放在这里
+dao：基于mybatis实现的数据持久化，提供给repository调用；如果使用其它存储架构，保证repository对外的接口不变，调整repository调用dao的逻辑
+common：基础工具

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banana.event.demo.dao.mapper.EventRecordDao">
+  <resultMap id="BaseResultMap" type="com.banana.event.demo.dao.pojo.EventRecord">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="event_id" jdbcType="BIGINT" property="eventId" />
+    <result column="aggregate_code" jdbcType="VARCHAR" property="aggregateCode" />
+    <result column="aggregate_id" jdbcType="VARCHAR" property="aggregateId" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="consumer_ids" jdbcType="VARCHAR" property="consumerIds" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="yn" jdbcType="INTEGER" property="yn" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, event_id, domain_code, aggregate_id, aggregate_code, version, event_code, publish_time,
+    body, consumer_ids, score, yn, create_time, update_time
+  </sql>
+  <insert id="insert" parameterType="com.banana.event.demo.dao.pojo.EventRecord">
+    <!--@mbg.generated-->
+      insert into event_record (event_id, domain_code,
+      aggregate_id, aggregate_code,
+    event_code, publish_time, body,
+      consumer_ids, score)
+      values ( #{eventId,jdbcType=BIGINT}, #{domainCode,jdbcType=VARCHAR},
+      #{aggregateId,jdbcType=INTEGER}, #{aggregateCode,jdbcType=VARCHAR},
+      #{eventCode,jdbcType=VARCHAR}, #{publishTime,jdbcType=TIMESTAMP},
+    #{body,jdbcType=VARCHAR} ,#{consumerIds,jdbcType=VARCHAR}, #{score, jdbcType=INTEGER})
+  </insert>
+
+  <update id="subtractScore">
+    update event_record
+    set score = score-1
+    where event_id = #{eventId,jdbcType=BIGINT}
+  </update>
+
+  
+  <select id="selectMaxVersion" resultType="java.lang.Integer">
+    select max(version)
+    from event_record
+    where yn = 1 and domain_code = #{domainCode,jdbcType=VARCHAR}
+    and aggregate_id = #{domainId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectById"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from event_record
+    where yn = 1 and event_id = #{eventId,jdbcType=BIGINT}
+  </select>
+</mapper>
