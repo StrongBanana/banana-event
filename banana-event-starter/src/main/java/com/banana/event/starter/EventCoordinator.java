@@ -4,7 +4,7 @@ import com.banana.event.starter.base.Event;
 import com.banana.event.starter.base.EventConsumerTask;
 import com.banana.event.starter.base.EventException;
 import com.banana.event.starter.extension.ConsumerTaskRepository;
-import com.banana.event.starter.extension.EventWarming;
+import com.banana.event.starter.extension.EventWarning;
 import com.banana.event.starter.extension.EventRepository;
 import com.banana.event.starter.factory.EventConsumerLogFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class EventCoordinator {
     private ConsumerTaskRepository consumerTaskRepository;
     /** */
     @Resource
-    private EventWarming eventWarming;
+    private EventWarning eventWarning;
 
     /**
      * 发布事件
@@ -56,7 +56,7 @@ public class EventCoordinator {
             consumerTaskRepository.batchCreate(tasks);
         }catch (Exception e){
             log.error("EventCoordinator->publish error", e);
-            eventWarming.publishWarning(event, e);
+            eventWarning.publishWarning(event, e);
             throw new EventException("事件发布失败" + e.getMessage());
         }
     }

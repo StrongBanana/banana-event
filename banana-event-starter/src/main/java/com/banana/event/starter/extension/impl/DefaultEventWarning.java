@@ -2,13 +2,13 @@ package com.banana.event.starter.extension.impl;
 
 import com.banana.event.starter.base.Event;
 import com.banana.event.starter.base.EventConsumerTask;
-import com.banana.event.starter.extension.EventWarming;
+import com.banana.event.starter.extension.EventWarning;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  */
 @Slf4j
-public class DefaultEventWarming implements EventWarming {
+public class DefaultEventWarning implements EventWarning {
 
 
     /**

@@ -4,7 +4,7 @@ import com.banana.event.starter.base.Event;
 import com.banana.event.starter.base.EventConsumerTask;
 import com.banana.event.starter.base.EventDomain;
 import com.banana.event.starter.extension.ConsumerTaskRepository;
-import com.banana.event.starter.extension.EventWarming;
+import com.banana.event.starter.extension.EventWarning;
 import com.banana.event.starter.extension.EventRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,7 +82,7 @@ public class WrapperEventConsumer implements EventConsumer {
             eventRepository.subtractScore(t.getEventId());
         }catch (Exception e){
             log.error("WrapperEventConsumer->accept error", e);
-            EventWarming listenerExtension = EventStarter.getBean(EventWarming.class);
+            EventWarning listenerExtension = EventStarter.getBean(EventWarning.class);
             listenerExtension.consumeWarning(t, task, e);
             task.processFail();
             // 同步事件处理器，抛出异常

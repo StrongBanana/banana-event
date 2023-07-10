@@ -8,6 +8,7 @@ import com.banana.event.starter.EventCoordinator;
 import com.banana.event.starter.base.Event;
 import com.banana.event.starter.factory.EventFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -23,6 +24,7 @@ public class OrderApplication {
     private EventCoordinator eventCoordinator;
     private Object Order;
 
+    @Transactional(rollbackFor = Exception.class)
     public Boolean submitOrder(BusinessCmdContext<SubmitOrderCmd> orderCmd){
 
          // 执行提单能力
@@ -39,6 +41,5 @@ public class OrderApplication {
             eventCoordinator.publish(event);
         }
         return Boolean.TRUE;
-
     }
 }

@@ -12,7 +12,7 @@ import com.banana.event.starter.base.EventConsumerTask;
  * @date: 2022/8/22 11:39 上午
  * @version: 1.0
  */
-public interface EventWarming {
+public interface EventWarning {
 
 
     /**

@@ -2,10 +2,10 @@ package com.banana.event.starter;
 
 import com.banana.event.starter.extension.ConsumerTaskRepository;
 import com.banana.event.starter.extension.EventIdFactory;
-import com.banana.event.starter.extension.EventWarming;
+import com.banana.event.starter.extension.EventWarning;
 import com.banana.event.starter.extension.EventRepository;
 import com.banana.event.starter.extension.impl.DefaultEventIdFactory;
-import com.banana.event.starter.extension.impl.DefaultEventWarming;
+import com.banana.event.starter.extension.impl.DefaultEventWarning;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -79,9 +79,9 @@ public class EventStarter implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Bean
-    @ConditionalOnMissingBean(EventWarming.class)
-    public EventWarming defaultEventListener(){
-        return new DefaultEventWarming();
+    @ConditionalOnMissingBean(EventWarning.class)
+    public EventWarning defaultEventListener(){
+        return new DefaultEventWarning();
     }
 
     @Bean

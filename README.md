@@ -1,8 +1,48 @@
-# banana-event-start
-基于DDD的事件组件
+## banana-event-start简述
+DDD每个聚合的操作都需要保证事务的一致性（聚合建模的不变条件），对于跨聚合的业务规则需要使用异步事件来保证最终一致性。
+## 好处
+（1）提供现成事件组件轮子，融合来DDD思想。
+## 不足
+### 事件的发布和业务操作的耦合
+事件是在一个聚合发送过的事情，需要**在业务操作之后去发布事件**；我们需要保证事件发布和聚合操作的一致性；既事务提交则事件发布成功。
+可以抽象为保证事件存储和领域模型存储的最终一致性。常用的方案如下：
+（1）领域模型和消息设施共享持久化存储。
+（2）领域模型的持久化存储和消息持久化存储由全局的XA事务（两阶段提交）所控制。
+banana-event-start使用的是方案（1）；借用mysql的事务来保证事件存储和领域模型存储的一致性；如果事件过多会有性能的风险，可以考虑将事件数据做冷热分离。
+代码示例：
+```java
+   @Component
+  public class OrderApplication {
+
+    @Resource
+    private EventCoordinator eventCoordinator;
+    private Object Order;
+
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean submitOrder(BusinessCmdContext<SubmitOrderCmd> orderCmd){
+
+        // 执行提单能力
+        Order order = new Order();
+        // 执行业务逻辑
+
+        // 发布事件
+        if (order.submitSuccess()){
+            Event event = EventFactory.newDefaultEvent(order, OrderEventEnum.SUBMIT_ORDER_SUCCESS);
+            eventCoordinator.publish(event);
+        } else {
+            //套餐下架
+            Event event = EventFactory.newDefaultEvent(order, OrderEventEnum.SUBMIT_ORDER_FAIL);
+            eventCoordinator.publish(event);
+        }
+        return Boolean.TRUE;
+    }
+}
+
+```
+[参考]：《实现领域驱动设计》
 
 
-## 类型说明
+## 接口说明
 ### com.banana.event.starter.base包
 EventDomain：抽象的领域分类接口
 AggregateType：聚合类型接口，每个聚合所有对应的领域
@@ -22,12 +62,25 @@ WrapperEventConsumer：包装用户使用时实现的consumer做一些增强处�
 EventRepository：事件对象的仓储接口，根据自己的需求进行实现，可以是任何存储。
 ConsumerTaskRepository：消费者任务的仓储接口，用户自己实现
 EventIdFactory：获取eventId的接口，默认为Long类型时间戳，用户可自己实现
-EventWarming：事件预警接口，用户可在事件在发布失败、处理失败时，实现扩展预警逻辑。
+EventWarning：事件预警接口，用户可在事件在发布失败、处理失败时，实现扩展预警逻辑。
 
 
+## 怎么使用
+具体案例参考demo
+### 引入jar
+```xml
+<dependency>
+    <groupId>org.example</groupId>
+    <artifactId>banana-event-starter</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+### 实现事件和事件消费者记录的仓储
+EventRepository、ConsumerTaskRepository
+最好自己实现EventIdFactory和EventWarning
+如果事件和消费记录使用mysql，表结构参考如下：
 ```sql
-
-
 CREATE TABLE `xfyl_merchant_event_record` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id主键',
   `event_id` bigint(20) NOT NULL COMMENT '事件ID',
@@ -61,7 +114,13 @@ CREATE TABLE `event_consumer` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT='事件消费记录表';
-
-
-
 ```
+
+### 异步事件消费
+通过MQ或者定时任务扫描消费者消费记录，调用com.banana.event.starter.EventCoordinator.disposeAsyncEvent进行异步事件处理
+
+### 事件发布与消费注册
+事件发布：com.banana.event.starter.EventCoordinator.publish
+消费者注册：com.banana.event.starter.EventConsumerRegister.register
+
+
