@@ -1,6 +1,6 @@
 package com.banana.event.starter.factory;
 
-import com.banana.event.starter.EventRegister;
+import com.banana.event.starter.EventConsumerRegister;
 import com.banana.event.starter.WrapperEventConsumer;
 import com.banana.event.starter.base.Event;
 import com.banana.event.starter.base.EventConsumerTask;
@@ -24,7 +24,7 @@ public class EventConsumerLogFactory {
      * @return
      */
     public static List<EventConsumerTask> buildTasks(Event event){
-        List<WrapperEventConsumer> list = EventRegister.consumers(event);
+        List<WrapperEventConsumer> list = EventConsumerRegister.consumers(event);
         List<EventConsumerTask> res = Lists.newArrayListWithExpectedSize(list.size());
         for (WrapperEventConsumer consumer : list) {
             EventConsumerTask task = EventConsumerTask.builder()

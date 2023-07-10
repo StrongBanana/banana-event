@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @date: 2022/8/17 10:27 下午
  * @version: 1.0
  */
-public class EventRegister {
+public class EventConsumerRegister {
     /** 事件唯一标识domainCode(领域编号) + aggregateCode（聚合编号） + eventCode（事件编号） */
     private static final String EVENT_SIGN_TEMPLATE = "{0}_{1}_{2}";
     /** 事件类型和处理器集合map */

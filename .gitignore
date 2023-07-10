@@ -4,6 +4,8 @@
 
 *.iml
 *.idea/
+*.idea
+*.idea.*
 */target
 */**/target
 *.war

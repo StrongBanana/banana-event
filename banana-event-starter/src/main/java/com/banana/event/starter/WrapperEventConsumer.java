@@ -4,12 +4,12 @@ import com.banana.event.starter.base.Event;
 import com.banana.event.starter.base.EventConsumerTask;
 import com.banana.event.starter.base.EventDomain;
 import com.banana.event.starter.extension.ConsumerTaskRepository;
-import com.banana.event.starter.extension.EventListener;
+import com.banana.event.starter.extension.EventWarming;
 import com.banana.event.starter.extension.EventRepository;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 时间消费者包装类
+ * 事件消费者包装类
  * @author: banana
  * @date: 2022/8/10 6:54 下午
  * @version: 1.0
@@ -82,7 +82,7 @@ public class WrapperEventConsumer implements EventConsumer {
             eventRepository.subtractScore(t.getEventId());
         }catch (Exception e){
             log.error("WrapperEventConsumer->accept error", e);
-            EventListener listenerExtension = EventStarter.getBean(EventListener.class);
+            EventWarming listenerExtension = EventStarter.getBean(EventWarming.class);
             listenerExtension.consumeWarning(t, task, e);
             task.processFail();
             // 同步事件处理器，抛出异常

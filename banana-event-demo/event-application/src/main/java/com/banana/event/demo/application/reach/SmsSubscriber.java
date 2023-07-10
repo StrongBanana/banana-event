@@ -2,7 +2,7 @@ package com.banana.event.demo.application.reach;
 
 import com.banana.event.demo.domain.DomainEnum;
 import com.banana.event.demo.domain.order.OrderEventEnum;
-import com.banana.event.starter.EventRegister;
+import com.banana.event.starter.EventConsumerRegister;
 import com.banana.event.starter.WrapperEventConsumer;
 import com.banana.event.starter.base.Event;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 public class SmsSubscriber {
 
     @Resource
-    private EventRegister register;
+    private EventConsumerRegister register;
     @Resource
     private SmsTriggerService smsTriggerService;
     @Resource

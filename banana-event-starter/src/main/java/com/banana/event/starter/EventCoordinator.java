@@ -4,7 +4,7 @@ import com.banana.event.starter.base.Event;
 import com.banana.event.starter.base.EventConsumerTask;
 import com.banana.event.starter.base.EventException;
 import com.banana.event.starter.extension.ConsumerTaskRepository;
-import com.banana.event.starter.extension.EventListener;
+import com.banana.event.starter.extension.EventWarming;
 import com.banana.event.starter.extension.EventRepository;
 import com.banana.event.starter.factory.EventConsumerLogFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class EventCoordinator {
     private ConsumerTaskRepository consumerTaskRepository;
     /** */
     @Resource
-    private EventListener eventListener;
+    private EventWarming eventWarming;
 
     /**
      * 发布事件
@@ -47,7 +47,7 @@ public class EventCoordinator {
             List<EventConsumerTask> tasks = EventConsumerLogFactory.buildTasks(event);
             for (EventConsumerTask task : tasks) {
                 if (!task.getIsAsync()){
-                    WrapperEventConsumer wrapperEventConsumer = EventRegister.syncConsumer(event, task.getConsumerCode());
+                    WrapperEventConsumer wrapperEventConsumer = EventConsumerRegister.syncConsumer(event, task.getConsumerCode());
                     wrapperEventConsumer.acceptSync(event, task);
                 }
             }
@@ -56,7 +56,7 @@ public class EventCoordinator {
             consumerTaskRepository.batchCreate(tasks);
         }catch (Exception e){
             log.error("EventCoordinator->publish error", e);
-            eventListener.publishWarning(event, e);
+            eventWarming.publishWarning(event, e);
             throw new EventException("事件发布失败" + e.getMessage());
         }
     }
@@ -86,7 +86,7 @@ public class EventCoordinator {
         if (Objects.isNull(existEvent)){
             throw new IllegalArgumentException("event not exist");
         }
-        WrapperEventConsumer wrapper = EventRegister.getConsumer(existEvent, consumerCode);
+        WrapperEventConsumer wrapper = EventConsumerRegister.getConsumer(existEvent, consumerCode);
         // todo 提供配置，如果可以容忍wrapper不存在的情况，则不处理
         if (Objects.isNull(wrapper)){
             throw new EventException("unwatch consumer consumerCode=" + consumerCode );

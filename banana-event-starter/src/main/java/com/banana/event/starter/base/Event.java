@@ -1,7 +1,7 @@
 package com.banana.event.starter.base;
 
 import com.alibaba.fastjson.JSON;
-import com.banana.event.starter.EventRegister;
+import com.banana.event.starter.EventConsumerRegister;
 
 import java.time.LocalDateTime;
 
@@ -52,9 +52,9 @@ public class Event {
         this.publishTime = LocalDateTime.now();
 
         // 获取当前事件注册的consumer，每个consumer 1分
-        Integer score = EventRegister.getScore(eventType);
+        Integer score = EventConsumerRegister.getScore(eventType);
         this.score = (score == null ? 0 : score);
-        this.consumerCodes = EventRegister.getConsumerCodes(eventType);
+        this.consumerCodes = EventConsumerRegister.getConsumerCodes(eventType);
     }
 
     /**
