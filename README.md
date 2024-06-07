@@ -99,7 +99,7 @@ EventRepository、ConsumerTaskRepository
 最好自己实现EventIdFactory和EventWarning
 如果事件和消费记录使用mysql，表结构参考如下：
 ```sql
-CREATE TABLE `xfyl_merchant_event_record` (
+CREATE TABLE `event_record` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id主键',
   `event_id` bigint(20) NOT NULL COMMENT '事件ID',
   `domain_code` varchar(60) NOT NULL COMMENT '领域编号',
